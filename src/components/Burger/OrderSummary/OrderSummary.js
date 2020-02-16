@@ -1,5 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import Button from '../../UI/Button/Button';
+import Checkout from '../../../containers/Checkout/Checkout';
 
 class OrderSummary extends Component {
   // doesn't have to be a class
@@ -14,7 +15,6 @@ class OrderSummary extends Component {
     });
 
     return (
-      //using fragment instead of aux hoc
       <Fragment>
         <h3>Order</h3>
         <p>A delicious burger with the following ingredients:</p>
@@ -23,13 +23,7 @@ class OrderSummary extends Component {
           <strong>Total Price: {this.props.price.toFixed(2)}</strong>
         </p>
         <p>Continue to Checkout?</p>
-
-        <Button btnType="Danger" clicked={this.props.purchaseCanceled}>
-          CANCEL
-        </Button>
-        <Button btnType="Success" clicked={this.props.purchaseContinued}>
-          CONTINUE
-        </Button>
+        <Checkout ingredients={this.props.ingredients}/>
       </Fragment>
     );
   }
