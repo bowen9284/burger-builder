@@ -14,7 +14,7 @@ const checkoutSummary = props => {
         CONTINUE
       </Button>
       <div style={{ margin: 'auto', width: '100%' }}>
-        {/* <Burger ingredients={props.ingredients} /> */}
+        <Burger ingredients={props.ingredients} />
       </div>
     </div>
   );
