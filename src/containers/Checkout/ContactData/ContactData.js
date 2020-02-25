@@ -7,11 +7,55 @@ import Input from '../../../components/UI/Input/Input';
 
 const ContactData = props => {
   const [contactInfo, setContactInfo] = useState({
-    name: '',
-    email: '',
-    address: {
-      street: '',
-      zipCode: ''
+    name: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        placeholder: 'Your Name'
+      },
+      value: 'Matt B'
+    },
+    street: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        placeholder: 'Street'
+      },
+      value: 'Street A'
+    },
+    zipCode: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        placeholder: 'Zip'
+      },
+      value: '90210'
+    },
+    country: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        placeholder: 'Country'
+      },
+      value: 'USA'
+    },
+    email: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'email',
+        placeholder: 'Email'
+      },
+      value: 'test@test.com'
+    },
+    deliveryMethod: {
+      elementType: 'select',
+      elementConfig: {
+        options: [
+          { value: 'fastest', displayValue: 'Fastest' },
+          { value: 'cheapest', displayValue: 'Cheapest' }
+        ]
+      },
+      value: 'dine-in'
     }
   });
 
@@ -20,23 +64,13 @@ const ContactData = props => {
   const orderHandler = event => {
     event.preventDefault();
     setLoading(true);
-    const order = {
+    const orderForm = {
       ingredients: props.ingredients,
-      price: props.price,
-      customer: {
-        name: 'M Bowe',
-        address: {
-          street: 'Street A',
-          zipCode: '90210',
-          country: 'USA'
-        },
-        email: 'test@test.com'
-      },
-      deliveryMethod: 'dine-in'
+      price: props.price
     };
 
     axios
-      .post('/orders.json', order)
+      .post('/orders.json', orderForm)
       .then(response => {
         setLoading(false);
         props.history.push('/');
@@ -46,12 +80,24 @@ const ContactData = props => {
       });
   };
 
+  const formElementsArray = [];
+  for (const key in contactInfo) {
+    formElementsArray.push({
+      id: key,
+      config: contactInfo[key]
+    });
+  }
+
   let form = (
     <form>
-      <Input inputtype="input" type="email" name="email" placeholder="Your Email" />
-      <Input inputtype="input" type="text" name="name" placeholder="Your Name" />
-      <Input inputtype="input" type="text" name="street" placeholder="Your Street" />
-      <Input inputtype="input" type="text" name="zipCode" placeholder="Your Zip Code" />
+      {formElementsArray.map(el => (
+        <Input
+          key={el.id}
+          elementType={el.config.type}
+          elementConfig={el.config.elementConfig}
+          value={el.config.value}
+        />
+      ))}
       <Button btnType="Success" clicked={orderHandler}>
         Submit
       </Button>
