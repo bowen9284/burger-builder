@@ -13,7 +13,7 @@ const ContactData = props => {
         type: 'text',
         placeholder: 'Your Name'
       },
-      value: 'Matt B'
+      value: ''
     },
     street: {
       elementType: 'input',
@@ -21,7 +21,7 @@ const ContactData = props => {
         type: 'text',
         placeholder: 'Street'
       },
-      value: 'Street A'
+      value: ''
     },
     zipCode: {
       elementType: 'input',
@@ -29,7 +29,7 @@ const ContactData = props => {
         type: 'text',
         placeholder: 'Zip'
       },
-      value: '90210'
+      value: ''
     },
     country: {
       elementType: 'input',
@@ -37,7 +37,7 @@ const ContactData = props => {
         type: 'text',
         placeholder: 'Country'
       },
-      value: 'USA'
+      value: ''
     },
     email: {
       elementType: 'input',
@@ -45,7 +45,7 @@ const ContactData = props => {
         type: 'email',
         placeholder: 'Email'
       },
-      value: 'test@test.com'
+      value: ''
     },
     deliveryMethod: {
       elementType: 'select',
@@ -55,7 +55,7 @@ const ContactData = props => {
           { value: 'cheapest', displayValue: 'Cheapest' }
         ]
       },
-      value: 'dine-in'
+      value: ''
     }
   });
 
@@ -64,9 +64,14 @@ const ContactData = props => {
   const orderHandler = event => {
     event.preventDefault();
     setLoading(true);
+    const orderData = {};
+    for (let field in contactInfo) {
+      orderData[field] = contactInfo[field];
+    }
     const orderForm = {
       ingredients: props.ingredients,
-      price: props.price
+      price: props.price,
+      orderData: orderData
     };
 
     axios
@@ -88,19 +93,28 @@ const ContactData = props => {
     });
   }
 
+  const inputChangedHandler = (event, inputIdentifier) => {
+    const updatedForm = {
+      ...contactInfo
+    };
+
+    updatedForm[inputIdentifier].value = event.target.value;
+
+    setContactInfo(updatedForm);
+  };
+
   let form = (
-    <form>
+    <form onSubmit={orderHandler}>
       {formElementsArray.map(el => (
         <Input
           key={el.id}
           elementType={el.config.elementType}
           elementConfig={el.config.elementConfig}
           value={el.config.value}
+          changed={event => inputChangedHandler(event, el.id)}
         />
       ))}
-      <Button btnType="Success" clicked={orderHandler}>
-        Submit
-      </Button>
+      <Button btnType="Success">Submit</Button>
     </form>
   );
 
