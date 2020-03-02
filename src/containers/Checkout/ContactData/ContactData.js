@@ -13,7 +13,11 @@ const ContactData = props => {
         type: 'text',
         placeholder: 'Your Name'
       },
-      value: ''
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false
     },
     street: {
       elementType: 'input',
@@ -21,7 +25,11 @@ const ContactData = props => {
         type: 'text',
         placeholder: 'Street'
       },
-      value: ''
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false
     },
     zipCode: {
       elementType: 'input',
@@ -29,7 +37,13 @@ const ContactData = props => {
         type: 'text',
         placeholder: 'Zip'
       },
-      value: ''
+      value: '',
+      validation: {
+        required: true,
+        minLength: 5,
+        maxLength: 0
+      },
+      valid: false
     },
     country: {
       elementType: 'input',
@@ -37,7 +51,11 @@ const ContactData = props => {
         type: 'text',
         placeholder: 'Country'
       },
-      value: ''
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false
     },
     email: {
       elementType: 'input',
@@ -45,7 +63,11 @@ const ContactData = props => {
         type: 'email',
         placeholder: 'Email'
       },
-      value: ''
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false
     },
     deliveryMethod: {
       elementType: 'select',
@@ -55,7 +77,11 @@ const ContactData = props => {
           { value: 'cheapest', displayValue: 'Cheapest' }
         ]
       },
-      value: ''
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false
     }
   });
 
@@ -97,10 +123,33 @@ const ContactData = props => {
     const updatedForm = {
       ...contactInfo
     };
+    let formElement = updatedForm[inputIdentifier];
+    formElement.value = event.target.value;
+    formElement.valid = checkValidity(
+      formElement.value,
+      formElement.validation
+    );
 
-    updatedForm[inputIdentifier].value = event.target.value;
-
+    console.log(formElement);
     setContactInfo(updatedForm);
+  };
+
+  const checkValidity = (value, rules) => {
+    let isValid = false;
+
+    if (rules.required) {
+      isValid = value.trim() !== '';
+    }
+
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength
+    }
+
+    if (rules.maxLength) {
+      isValid = value.maxLength <= rules.maxLength
+    }
+
+    return isValid;
   };
 
   let form = (
