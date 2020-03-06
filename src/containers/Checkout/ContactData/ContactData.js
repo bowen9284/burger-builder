@@ -4,8 +4,11 @@ import classes from './ContactData.module.css';
 import axios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
+import { unstable_batchedUpdates } from 'react-dom';
 
 const ContactData = props => {
+  const [loading, setLoading] = useState(false);
+  const [canSubmitForm, setCanSubmitForm] = useState(false);
   const [contactInfo, setContactInfo] = useState({
     name: {
       elementType: 'input',
@@ -17,7 +20,8 @@ const ContactData = props => {
       validation: {
         required: true
       },
-      valid: false
+      valid: false,
+      touched: false
     },
     street: {
       elementType: 'input',
@@ -29,7 +33,8 @@ const ContactData = props => {
       validation: {
         required: true
       },
-      valid: false
+      valid: false,
+      touched: false
     },
     zipCode: {
       elementType: 'input',
@@ -43,7 +48,8 @@ const ContactData = props => {
         minLength: 5,
         maxLength: 5
       },
-      valid: false
+      valid: false,
+      touched: false
     },
     country: {
       elementType: 'input',
@@ -55,7 +61,8 @@ const ContactData = props => {
       validation: {
         required: true
       },
-      valid: false
+      valid: false,
+      touched: false
     },
     email: {
       elementType: 'input',
@@ -67,7 +74,8 @@ const ContactData = props => {
       validation: {
         required: true
       },
-      valid: false
+      valid: false,
+      touched: false
     },
     deliveryMethod: {
       elementType: 'select',
@@ -81,11 +89,9 @@ const ContactData = props => {
       validation: {
         required: true
       },
-      valid: false
+      valid: true
     }
   });
-
-  const [loading, setLoading] = useState(false);
 
   const orderHandler = event => {
     event.preventDefault();
@@ -123,14 +129,28 @@ const ContactData = props => {
     const updatedForm = {
       ...contactInfo
     };
-    let formElement = updatedForm[inputIdentifier];
-    formElement.value = event.target.value;
-    formElement.valid = checkValidity(
-      formElement.value,
-      formElement.validation
+
+    const updatedFormElement = {
+      ...updatedForm[inputIdentifier]
+    };
+
+    updatedFormElement.value = event.target.value;
+    updatedFormElement.valid = checkValidity(
+      updatedFormElement.value,
+      updatedFormElement.validation
     );
 
-    console.log(formElement);
+
+    updatedFormElement.touched = true;
+    updatedForm[inputIdentifier] = updatedFormElement;
+
+    let formIsValid = true;
+    for (let input in updatedFormElement) {
+      formIsValid = updatedFormElement[input].valid && formIsValid;
+    }
+
+
+    setCanSubmitForm(formIsValid);
     setContactInfo(updatedForm);
   };
 
@@ -148,7 +168,6 @@ const ContactData = props => {
     if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid;
     }
-
     return isValid;
   };
 
@@ -161,9 +180,14 @@ const ContactData = props => {
           elementConfig={el.config.elementConfig}
           value={el.config.value}
           changed={event => inputChangedHandler(event, el.id)}
+          invalid={!el.config.valid}
+          shouldValidate={el.config.validation}
+          touched={el.config.touched}
         />
       ))}
-      <Button btnType="Success">Submit</Button>
+      <Button btnType="Success" disabled={!canSubmitForm}>
+        Submit
+      </Button>
     </form>
   );
 
