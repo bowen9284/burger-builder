@@ -85,10 +85,8 @@ const ContactData = props => {
           { value: 'cheapest', displayValue: 'Cheapest' }
         ]
       },
-      value: '',
-      validation: {
-        required: true
-      },
+      value: 'fastest',
+      validation: {},
       valid: true
     }
   });
