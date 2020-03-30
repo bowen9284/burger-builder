@@ -15,7 +15,6 @@ function App() {
           <Route path="/" exact component={BurgerBuilder} />
         </Switch>
       </Layout>
-      <Switch></Switch>
     </div>
   );
 }
