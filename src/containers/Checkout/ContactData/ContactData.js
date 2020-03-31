@@ -4,7 +4,7 @@ import classes from './ContactData.module.css';
 import axios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
-import { unstable_batchedUpdates } from 'react-dom';
+import { connect } from 'react-redux';
 
 const ContactData = props => {
   const [loading, setLoading] = useState(false);
@@ -100,7 +100,7 @@ const ContactData = props => {
     }
     const orderForm = {
       ingredients: props.ingredients,
-      price: props.price,
+      price: props.totalPrice,
       orderData: orderData
     };
 
@@ -143,11 +143,12 @@ const ContactData = props => {
     updatedForm[inputIdentifier] = updatedFormElement;
 
     let formIsValid = true;
+
     for (let input in updatedFormElement) {
       formIsValid = updatedFormElement[input].valid && formIsValid;
+      console.log('ele', updatedFormElement);
+
     }
-
-
     setCanSubmitForm(formIsValid);
     setContactInfo(updatedForm);
   };
@@ -201,4 +202,12 @@ const ContactData = props => {
   );
 };
 
-export default ContactData;
+const mapStateToProps = state => {
+  return {
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice
+  };
+};
+
+
+export default connect(mapStateToProps)(ContactData);

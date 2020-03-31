@@ -32,7 +32,6 @@ const reducer = (state = initialState, action) => {
   // eslint-disable-next-line default-case
   switch (action.type) {
     case actions.LOAD_INGREDIENTS: {
-        console.log(action);
       return {
         ...state,
         ingredients: action.ingredients
