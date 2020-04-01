@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 
 class BurgerBuilder extends Component {
   state = {
-    ingredients: {},
     purchasing: false,
     loading: false,
     error: false
@@ -37,9 +36,20 @@ class BurgerBuilder extends Component {
     this.setState({ purchasing: false });
   };
 
+  updatePurchaseState = ingredients => {
+    const sum = Object.keys(ingredients)
+      .map(key => {
+        return ingredients[key];
+      })
+      .reduce((sum, el) => {
+        return sum + el;
+      }, 0);
+
+    return sum > 0;
+  };
+
   purchaseContinueHandler = () => {
-    this.props.history.push({
-      pathname: '/checkout'    });
+    this.props.history.push('/checkout');
   };
 
   render() {
@@ -63,10 +73,10 @@ class BurgerBuilder extends Component {
         <Aux>
           <Burger ingredients={this.props.ingredients} />
           <BuildControls
-            ingredientAdded={this.props.addIngredientHandler}
-            ingredientRemoved={this.props.removeIngredientHandler}
+            ingredientAdded={this.props.onAddIngredient}
+            ingredientRemoved={this.props.onRemoveIngredient}
             disabled={disabledInfo}
-            purchaseable={this.props.purchaseable}
+            purchaseable={this.updatePurchaseState(this.props.ingredients)}
             ordered={this.purchaseHandler}
             price={this.props.totalPrice}
           />
@@ -74,7 +84,7 @@ class BurgerBuilder extends Component {
       );
       orderSummary = (
         <OrderSummary
-          ingredients={this.state.ingredients}
+          ingredients={this.props.ingredients}
           price={this.props.totalPrice}
           purchaseCancelled={this.purchaseCancelHandler}
           purchaseContinued={this.purchaseContinueHandler}
@@ -109,12 +119,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addIngredientHandler: ingredientType =>
+    onAddIngredient: ingredientType =>
       dispatch({
         type: actions.ADD_INGREDIENT,
         ingredientType: ingredientType
       }),
-    removeIngredientHandler: ingredientType =>
+    onRemoveIngredient: ingredientType =>
       dispatch({
         type: actions.REMOVE_INGREDIENT,
         ingredientType: ingredientType

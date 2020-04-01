@@ -23,13 +23,7 @@ const Checkout = props => {
       />
       <Route
         path={props.match.url + '/contact-data'}
-        render={() => (
-          <ContactData
-            ingredients={props.ingredients}
-            price={props.totalPrice}
-            {...props}
-          />
-        )}
+        component={ContactData}
       ></Route>
     </div>
   );
@@ -38,7 +32,6 @@ const Checkout = props => {
 const mapStateToProps = state => {
   return {
     ingredients: state.ingredients,
-    totalPrice: state.totalPrice
   };
 };
 

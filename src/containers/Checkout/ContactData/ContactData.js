@@ -138,16 +138,13 @@ const ContactData = props => {
       updatedFormElement.validation
     );
 
-
     updatedFormElement.touched = true;
     updatedForm[inputIdentifier] = updatedFormElement;
 
     let formIsValid = true;
 
-    for (let input in updatedFormElement) {
-      formIsValid = updatedFormElement[input].valid && formIsValid;
-      console.log('ele', updatedFormElement);
-
+    for (let input in updatedForm) {
+      formIsValid = updatedForm[input].valid && formIsValid;
     }
     setCanSubmitForm(formIsValid);
     setContactInfo(updatedForm);
@@ -208,6 +205,5 @@ const mapStateToProps = state => {
     totalPrice: state.totalPrice
   };
 };
-
 
 export default connect(mapStateToProps)(ContactData);
