@@ -7,7 +7,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components//UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import { connect } from 'react-redux';
-import * as burgerBuilderActions from '../../store/actions/index';
+import * as actions from '../../store/actions/index';
 import axios from '../../axios-orders';
 
 class BurgerBuilder extends Component {
@@ -100,9 +100,9 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice,
-    purchaseable: state.purchaseable,
+    ingredients: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    purchaseable: state.burgerBuilder.purchaseable,
     error: state.error,
   };
 };
@@ -110,11 +110,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onAddIngredient: (ingredientType) =>
-      dispatch(burgerBuilderActions.addIngredient(ingredientType)),
+      dispatch(actions.addIngredient(ingredientType)),
     onRemoveIngredient: (ingredientType) =>
-      dispatch(burgerBuilderActions.removeIngredient(ingredientType)),
-    onInitIngredients: (ingredients) =>
-      dispatch(burgerBuilderActions.initIngredients()),
+      dispatch(actions.removeIngredient(ingredientType)),
+    onInitIngredients: () => dispatch(actions.initIngredients()),
+    onInitPurchase: () => dispatch(actions.purchaseInit()),
   };
 };
 
