@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import { updateObject } from '../utility';
 
 const initialState = {
   ingredients: null,
@@ -7,58 +8,72 @@ const initialState = {
   error: false,
 };
 
-const reducer = (state = initialState, action) => {
-  const INGREDIENT_PRICES = {
-    salad: 0.5,
-    cheese: 0.4,
-    meat: 1.3,
-    bacon: 0.7,
+const INGREDIENT_PRICES = {
+  salad: 0.5,
+  cheese: 0.4,
+  meat: 1.3,
+  bacon: 0.7,
+};
+
+const addIngredient = (state, action) => {
+  const updatedIngredient = {
+    [action.ingredientType]: state.ingredients[action.ingredientType] + 1,
+  };
+  const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+  const updatedState = {
+    ingredients: updatedIngredients,
+    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientType],
+    purchaseable: true,
   };
 
-  // eslint-disable-next-line default-case
+  return updateObject(state, updatedState);
+};
+
+const removeIngredient = (state, action) => {
+  const updatedIngredient = {
+    [action.ingredientType]: state.ingredients[action.ingredientType] - 1,
+  };
+  const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+  const updatedState = {
+    ingredients: updatedIngredients,
+    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientType],
+    purchaseable: true,
+  };
+
+  return updateObject(state, updatedState);
+};
+
+const setIngredients = (state, action) => {
+  return updateObject(state, {
+    ingredients: action.ingredients,
+    error: false,
+    totalPrice: 4,
+  });
+};
+
+const fetchIngredientsFailed = (state, action) => {
+  return updateObject(state, { error: true });
+};
+
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_INGREDIENTS: {
-      return {
-        ...state,
-        ingredients: action.ingredients,
-        error: false,
-        totalPrice: 4,
-      };
+      return setIngredients(state, action);
     }
+
     case actionTypes.FETCH_INGREDIENTS_FAILED: {
-      return {
-        ...state,
-        error: true,
-      };
+      return fetchIngredientsFailed(state, action);
     }
-    case actionTypes.ADD_INGREDIENT: {
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientType]: state.ingredients[action.ingredientType] + 1,
-        },
-        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientType],
-        // ingredients: updatedIngredients,
-        purchaseable: true,
-      };
-    }
+
+    case actionTypes.ADD_INGREDIENT:
+      return addIngredient(state, action);
 
     case actionTypes.REMOVE_INGREDIENT: {
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientType]: state.ingredients[action.ingredientType] - 1,
-        },
-        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientType],
-        // ingredients: updatedIngredients,
-        purchaseable: true,
-      };
+      return removeIngredient(state, action);
     }
+    default:
+      return state;
   }
-
-  return state;
 };
 
 export default reducer;
