@@ -103,9 +103,10 @@ const ContactData = (props) => {
       ingredients: props.ingredients,
       price: props.totalPrice,
       orderData: orderData,
+      userId: props.userId,
     };
 
-    props.onOrderBurger(orderForm);
+    props.onOrderBurger(orderForm, props.token);
   };
 
   const formElementsArray = [];
@@ -197,12 +198,15 @@ const mapStateToProps = (state) => {
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
+    userId: state.auth.userId,
+    token: state.auth.token,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData)),
+    onOrderBurger: (orderData, token) =>
+      dispatch(actions.purchaseBurger(orderData, token)),
   };
 };
 

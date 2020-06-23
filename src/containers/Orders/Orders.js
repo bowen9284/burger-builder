@@ -8,7 +8,7 @@ import * as actions from '../../store/actions/index';
 
 const Orders = (props) => {
   useEffect(() => {
-    props.onFetchOrders(props.token);
+    props.onFetchOrders(props.token, props.userId);
   }, []);
 
   let ordersList = <Spinner />;
@@ -28,7 +28,8 @@ const Orders = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFetchOrders: (token) => dispatch(actions.fetchOrders(token)),
+    onFetchOrders: (token, userId) =>
+      dispatch(actions.fetchOrders(token, userId)),
   };
 };
 
@@ -37,6 +38,7 @@ const mapStateToProps = (state) => {
     orders: state.order.orders,
     loading: state.order.loading,
     token: state.auth.token,
+    userId: state.auth.userId,
   };
 };
 
