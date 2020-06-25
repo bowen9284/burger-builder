@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
 import axios from '../../../axios-orders';
+import { updateObject } from '../../../shared/utility';
 
 const ContactData = (props) => {
   const [canSubmitForm, setCanSubmitForm] = useState(false);
@@ -118,28 +119,24 @@ const ContactData = (props) => {
   }
 
   const inputChangedHandler = (event, inputIdentifier) => {
-    const updatedForm = {
-      ...contactInfo,
-    };
+    const updatedFormElement = updateObject(contactInfo[inputIdentifier], {
+      value: event.target.value,
+      valid: checkValidity(
+        event.target.value,
+        contactInfo[inputIdentifier].validation
+      ),
+      touched: true,
+    });
 
-    const updatedFormElement = {
-      ...updatedForm[inputIdentifier],
-    };
-
-    updatedFormElement.value = event.target.value;
-    updatedFormElement.valid = checkValidity(
-      updatedFormElement.value,
-      updatedFormElement.validation
-    );
-
-    updatedFormElement.touched = true;
-    updatedForm[inputIdentifier] = updatedFormElement;
+    const updatedForm = updateObject(contactInfo, {
+      [inputIdentifier]: updatedFormElement,
+    });
 
     let formIsValid = true;
-
     for (let input in updatedForm) {
       formIsValid = updatedForm[input].valid && formIsValid;
     }
+
     setCanSubmitForm(formIsValid);
     setContactInfo(updatedForm);
   };
