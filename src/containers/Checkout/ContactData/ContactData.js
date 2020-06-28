@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
 import axios from '../../../axios-orders';
-import { updateObject } from '../../../shared/utility';
+import { updateObject, checkValidity } from '../../../shared/utility';
 
 const ContactData = (props) => {
   const [canSubmitForm, setCanSubmitForm] = useState(false);
@@ -139,23 +139,6 @@ const ContactData = (props) => {
 
     setCanSubmitForm(formIsValid);
     setContactInfo(updatedForm);
-  };
-
-  const checkValidity = (value, rules) => {
-    let isValid = true;
-
-    if (rules.required) {
-      isValid = value.trim() !== '' && isValid;
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-    return isValid;
   };
 
   let form = (
