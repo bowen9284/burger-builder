@@ -1,6 +1,5 @@
 import reducer from './auth';
 import * as actionTypes from '../actions/actionTypes';
-import { bindActionCreators } from 'redux';
 
 describe('auth reducer', () => {
   let initialState;
@@ -13,7 +12,7 @@ describe('auth reducer', () => {
       authRedirect: '/',
     };
   });
-  
+
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
