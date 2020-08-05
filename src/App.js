@@ -5,6 +5,8 @@ import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import Logout from './containers/Auth/Logout/Logout';
 import * as actions from './store/actions/index';
+import LogRocket from 'logrocket';
+LogRocket.init('moacwv/burger-builder-1v0rv');
 
 const Checkout = React.lazy(() => import('./containers/Checkout/Checkout'));
 const Auth = React.lazy(() => import('./containers/Auth/Auth'));
